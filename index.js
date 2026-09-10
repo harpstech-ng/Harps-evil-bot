@@ -5,23 +5,25 @@ const http = require("http")
 
 const run = async () => {
   try {
+    console.log(`🔥 HARPS TECH BOT v3.0 STARTING...`) // NEW
     const platform = getPlatformInfo?.().platform?.toLowerCase() || ""
-
+    
     if (!platform.includes("pterodactyl")) {
       const server = http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" })
-        res.end("Bot is running\n")
+        res.end("HARPS TECH BOT IS RUNNING 24/7\n") // CHANGED
       })
-
+      
       const PORT = process.env.PORT || 5000
       server.listen(PORT, () => {
-        console.log(`Listening on port ${PORT}`)
+        console.log(`HARPS BOT Listening on port ${PORT}`)
       })
     }
-
+    
     await sock()
   } catch (e) {
-    console.error(e)
+    console.error("HARPS BOT CRASHED:", e) // CHANGED
+    process.exit(1) // Auto restart
   }
 }
 
@@ -31,9 +33,12 @@ if (!process.env.PM2_HOME && !process.env.STARTED_BY_NPM) {
     shell: true,
     env: { ...process.env, STARTED_BY_NPM: "true" }
   })
-
-  pm2p.on("error", err => console.error("Failed to start PM2:", err))
-  pm2p.on("exit", code => console.error("PM2 process exited with code:", code))
+  
+  pm2p.on("error", err => console.error("Failed to start:", err))
+  pm2p.on("exit", code => {
+    console.error("Process exited with code:", code)
+    process.exit(code) // Auto restart again
+  })
   return
 }
 
